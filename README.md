@@ -119,6 +119,7 @@ All agents connect via [Streamable HTTP](https://modelcontextprotocol.io/specifi
 |------|-------------|
 | `ingest_signal` | Send raw sensor data. Returns unified stress score + state + adaptation prompt. |
 | `get_state` | Get current physiological state for a session. |
+| `get_trigger_memory` | Retrieve psychological trigger profile for a subject. Shows which topics cause stress and which have been resolved. |
 | `get_history` | Get state history over time for a session. |
 | `delete_subject` | GDPR-compliant deletion of all data for a subject. |
 
@@ -155,4 +156,4 @@ It should list the tools above.
 
 ## License
 
-Proprietary. See [nefesh.ai/terms](https://nefesh.ai/terms).
+MIT — see [LICENSE](LICENSE).
