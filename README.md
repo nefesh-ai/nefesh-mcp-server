@@ -1,10 +1,12 @@
 # Nefesh MCP Server
 
-A [Model Context Protocol](https://modelcontextprotocol.io) server that gives AI agents real-time awareness of human physiological state — stress level, confidence, and behavioral adaptation prompts.
+A [Model Context Protocol](https://modelcontextprotocol.io) server that gives AI agents real-time awareness of human physiological state — stress level, confidence, and machine-readable behavioral actions.
 
 ## What it does
 
-Your AI agent sends sensor data (heart rate, voice, video, text) via the Nefesh API. The MCP server returns a unified stress score (0-100), a state label (Calm → Acute Stress), and an adaptation prompt that tells the agent how to adjust its behavior.
+Your AI agent sends sensor data (heart rate, voice, video, text) via the Nefesh API. The MCP server returns a unified stress score (0-100), a state label (Calm → Acute Stress), a `suggested_action` your agent can follow directly, and an `action_reason` explaining why.
+
+**Zero prompt engineering required.** The agent gets a machine-readable action (`de-escalate_and_shorten`, `pause_and_ground`, etc.) and adapts automatically.
 
 **Signals supported:** cardiovascular (HR, HRV, RR intervals), vocal (pitch, jitter, shimmer), visual (facial action units), textual (sentiment, keywords)
 
@@ -119,11 +121,42 @@ All agents connect via [Streamable HTTP](https://modelcontextprotocol.io/specifi
 
 | Tool | Description |
 |------|-------------|
-| `get_human_state` | Returns current stress state, score (0-100), and confidence for a session |
-| `ingest` | Send biometric signals — heart rate, voice tone, facial expression, sentiment, and 50+ more fields |
+| `get_human_state` | Returns current stress state, score (0-100), confidence, `suggested_action`, and `action_reason` for a session |
+| `ingest` | Send biometric signals — heart rate, voice tone, facial expression, sentiment, and 50+ more fields. Returns state + action. |
 | `get_trigger_memory` | Returns psychological trigger profile — which topics cause stress, active vs. resolved |
 | `get_session_history` | Returns chronological state history for a session |
 | `delete_subject` | Deletes all stored data for a subject (GDPR compliance) |
+
+## Agent Actions
+
+Every API response includes a `suggested_action` your agent can follow directly — no prompt engineering needed:
+
+| Score | State | `suggested_action` | What the agent should do |
+|-------|-------|-------------------|--------------------------|
+| 0-19 | Calm | `maintain_engagement` | Full complexity. Challenge assumptions, push deeper. |
+| 20-39 | Relaxed | `maintain_engagement` | Maintain complexity. 3-5 sentences. |
+| 40-59 | Focused | `simplify_and_focus` | Reduce complexity. 2-3 sentences. Actionable. |
+| 60-79 | Stressed | `de-escalate_and_shorten` | Max 2 sentences. Direct, factual, no ambiguity. |
+| 80-100 | Acute Stress | `pause_and_ground` | Max 1 sentence. Single directive only. |
+
+Example response:
+```json
+{
+  "state": "stressed",
+  "stress_score": 73,
+  "confidence": 0.87,
+  "signals_received": ["cardiovascular", "vocal", "textual"],
+  "suggested_action": "de-escalate_and_shorten",
+  "action_reason": "elevated heart rate + anxious vocal tone + negative sentiment",
+  "recommendation": "Max 2 sentences. Direct, factual, no ambiguity.",
+  "disclaimer": "Not a medical device. For contextual AI adaptation only."
+}
+```
+
+Inject it into your system prompt in one line:
+```
+ACTION: {suggested_action} — REASON: {action_reason}
+```
 
 ## Trigger Memory
 
@@ -187,13 +220,13 @@ It should list the 5 tools above.
 
 ## State labels
 
-| Score | State |
-|-------|-------|
-| 0-19 | Calm |
-| 20-39 | Relaxed |
-| 40-59 | Focused |
-| 60-79 | Stressed |
-| 80-100 | Acute Stress |
+| Score | State | `suggested_action` |
+|-------|-------|--------------------|
+| 0-19 | Calm | `maintain_engagement` |
+| 20-39 | Relaxed | `maintain_engagement` |
+| 40-59 | Focused | `simplify_and_focus` |
+| 60-79 | Stressed | `de-escalate_and_shorten` |
+| 80-100 | Acute Stress | `pause_and_ground` |
 
 ## Pricing
 
