@@ -12,7 +12,7 @@ On the 2nd+ call, the response includes `adaptation_effectiveness` — telling y
 
 ### 1. Get an API key
 
-**Option A:** Sign up at [nefesh.ai/signup](https://nefesh.ai/signup) — free tier, no credit card.
+**Option A:** Sign up at [nefesh.ai/signup](https://nefesh.ai/signup) — 1,000 API calls/month, no credit card.
 
 **Option B:** Let your AI agent get one automatically via the `request_api_key` tool (see [Self-Provisioning](#api-key-self-provisioning) below).
 
@@ -144,10 +144,10 @@ It should list the 7 tools above.
 
 ## Pricing
 
-| Plan | Price | Included |
-|------|-------|----------|
-| **Free** | $0 | Get started, no credit card |
-| **Solo** | $25/month | Higher limits |
+| Plan | Price | API Calls |
+|------|-------|-----------|
+| **Free** | $0 | 1,000/month, no credit card |
+| **Solo** | $25/month | 50,000/month |
 | **Enterprise** | Custom | Custom SLA |
 
 Get your free key at [nefesh.ai/signup](https://nefesh.ai/signup).
