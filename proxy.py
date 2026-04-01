@@ -25,7 +25,7 @@ _nefesh_key: ContextVar[str] = ContextVar("nefesh_key", default="")
 
 def _headers() -> dict:
     """Build proxy headers with the caller's API key."""
-    key = _nefesh_key.get() or os.environ.get("NEFESH_API_KEY", "")
+    key = _nefesh_key.get()
     return {"X-Nefesh-Key": key, "Content-Type": "application/json"}
 
 
@@ -58,7 +58,9 @@ async def get_human_state(session_id: str) -> dict:
         )
         if resp.status_code == 200:
             return resp.json()
-        return {"error": f"No data for session {session_id}. Send signals via ingest first."}
+        if resp.status_code == 404:
+            return {"error": f"No data for session {session_id}. Send signals via ingest first."}
+        return {"error": f"API returned {resp.status_code}. Check your API key and parameters."}
 
 
 # ── Tool: ingest ────────────────────────────────────────────────
@@ -119,7 +121,7 @@ async def ingest(
         )
         if resp.status_code == 200:
             return resp.json()
-        return {"error": "Signal processing failed. Check payload format."}
+        return {"error": f"API returned {resp.status_code}. Check your API key and parameters."}
 
 
 # ── Tool: get_trigger_memory ────────────────────────────────────
@@ -139,7 +141,7 @@ async def get_trigger_memory(subject_id: str) -> dict:
         )
         if resp.status_code == 200:
             return resp.json()
-        return {"error": f"No trigger data for subject {subject_id}."}
+        return {"error": f"No trigger data found for subject {subject_id}."}
 
 
 # ── Tool: get_session_history ───────────────────────────────────
@@ -158,25 +160,7 @@ async def get_session_history(session_id: str, minutes: int = 5) -> dict:
         )
         if resp.status_code == 200:
             return resp.json()
-        return {"error": f"No history for session {session_id}."}
-
-
-# ── Tool: delete_subject ────────────────────────────────────────
-@mcp.tool()
-async def delete_subject(subject_id: str) -> dict:
-    """Permanently delete all data for a subject_id.
-
-    Cascading: removes all sessions, TriggerMemory, and stored signals.
-    GDPR/BIPA compliant. Irreversible. Not a medical device.
-    """
-    async with httpx.AsyncClient(timeout=10) as client:
-        resp = await client.delete(
-            f"{API_URL}/v1/subjects/{subject_id}",
-            headers=_headers(),
-        )
-        if resp.status_code == 200:
-            return resp.json()
-        return {"error": "Deletion failed. Check the subject_id."}
+        return {"error": f"No history found for session {session_id}."}
 
 
 # ── Run ─────────────────────────────────────────────────────────

@@ -10,13 +10,57 @@ On the 2nd+ call, the response includes `adaptation_effectiveness` — telling y
 
 ## Setup
 
-### 1. Get an API key
+### Option A: Connect first, get a key through your agent (fastest)
 
-**Option A:** Sign up at [nefesh.ai/signup](https://nefesh.ai/signup) — 1,000 API calls/month, no credit card.
+Add the config **without an API key** — your agent will get one automatically.
 
-**Option B:** Let your AI agent get one automatically via the `request_api_key` tool (see [Self-Provisioning](#api-key-self-provisioning) below).
+```json
+{
+  "mcpServers": {
+    "nefesh": {
+      "url": "https://mcp.nefesh.ai/mcp"
+    }
+  }
+}
+```
 
-### 2. Add to your AI agent
+Then ask your agent:
+
+> "Connect to Nefesh and get me a free API key for name@example.com"
+
+The agent calls `request_api_key` → you click one email link → the agent picks up the key. No signup form, no manual copy-paste. After that, add the key to your config for future sessions:
+
+```json
+{
+  "mcpServers": {
+    "nefesh": {
+      "url": "https://mcp.nefesh.ai/mcp",
+      "headers": {
+        "X-Nefesh-Key": "nfsh_free_..."
+      }
+    }
+  }
+}
+```
+
+### Option B: Get a key first, then connect
+
+Sign up at [nefesh.ai/signup](https://nefesh.ai/signup) (1,000 calls/month, no credit card), then add the config with your key:
+
+```json
+{
+  "mcpServers": {
+    "nefesh": {
+      "url": "https://mcp.nefesh.ai/mcp",
+      "headers": {
+        "X-Nefesh-Key": "YOUR_API_KEY"
+      }
+    }
+  }
+}
+```
+
+### Agent-specific config files
 
 | Agent | Config file |
 |-------|-------------|
@@ -38,19 +82,6 @@ On the 2nd+ call, the response includes `adaptation_effectiveness` — telling y
 | **Augment** | Settings Panel (UI) |
 | **Replit** | Integrations Page (web UI) |
 | **LibreChat** | `librechat.yaml` (self-hosted) |
-
-```json
-{
-  "mcpServers": {
-    "nefesh": {
-      "url": "https://mcp.nefesh.ai/mcp",
-      "headers": {
-        "X-Nefesh-Key": "<YOUR_API_KEY>"
-      }
-    }
-  }
-}
-```
 
 <details>
 <summary><strong>VS Code (Copilot)</strong> — uses <code>servers</code> instead of <code>mcpServers</code></summary>
@@ -113,26 +144,26 @@ All agents connect via [Streamable HTTP](https://modelcontextprotocol.io/specifi
 
 ## Tools
 
-| Tool | Description |
-|------|-------------|
-| `get_human_state` | Get current stress state, score, confidence, and suggested action for a session |
-| `ingest` | Send biometric signals, get unified state back |
-| `get_trigger_memory` | Get psychological trigger profile for a subject |
-| `get_session_history` | Get state history over time |
-| `delete_subject` | Delete all stored data for a subject (GDPR) |
-| `request_api_key` | Request a free API key by email (no auth required) |
-| `check_api_key_status` | Poll for API key activation (no auth required) |
+| Tool | Auth required | Description |
+|------|:---:|-------------|
+| `request_api_key` | No | Request a free API key by email |
+| `check_api_key_status` | No | Poll for API key activation after email click |
+| `get_human_state` | Yes | Get current stress state, score, confidence, and suggested action |
+| `ingest` | Yes | Send biometric signals, get unified state back |
+| `get_trigger_memory` | Yes | Get psychological trigger profile for a subject |
+| `get_session_history` | Yes | Get state history over time |
+| `delete_subject` | Yes | Delete all stored data for a subject (GDPR) |
 
-## API Key Self-Provisioning
+## How self-provisioning works
 
-AI agents can get their own free API key without manual signup. The developer only clicks one email link.
+Your AI agent can get a free API key autonomously. You only click one email link.
 
-1. Agent calls `request_api_key` with the developer's email
-2. Agent polls `check_api_key_status` every 10 seconds
-3. Developer clicks the verification link in the email
-4. Next poll returns the API key
+1. Agent calls `request_api_key(email)` — no API key needed for this call
+2. You receive a verification email and click the link
+3. Agent polls `check_api_key_status(request_id)` every 10 seconds
+4. Once verified, the agent receives the API key and can use all other tools
 
-Both tools work **without an existing API key**.
+Free tier: 1,000 calls/month, all signal types, 10 req/min. No credit card.
 
 ## Quick test
 
@@ -149,8 +180,6 @@ It should list the 7 tools above.
 | **Free** | $0 | 1,000/month, no credit card |
 | **Solo** | $25/month | 50,000/month |
 | **Enterprise** | Custom | Custom SLA |
-
-Get your free key at [nefesh.ai/signup](https://nefesh.ai/signup).
 
 ## Documentation
 
