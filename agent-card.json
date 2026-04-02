@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "humanReadableId": "nefesh/human-state",
-  "agentVersion": "6.1.0",
+  "agentVersion": "4.0.0",
   "name": "Nefesh Human State Agent",
   "description": "Provides real-time human physiological state awareness for AI agents. Fuses biometric signals (heart rate, HRV, voice, facial expression, text sentiment) into a unified stress score (0-100) with behavioral adaptation prompts. Includes trigger memory for cross-session psychological context and adaptation effectiveness feedback.",
   "url": "https://mcp.nefesh.ai/a2a",
