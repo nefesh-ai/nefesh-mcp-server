@@ -44,11 +44,19 @@ mcp = FastMCP(
 # ── Tool: get_human_state ───────────────────────────────────────
 @mcp.tool()
 async def get_human_state(session_id: str) -> dict:
-    """Get current unified human state for a session.
+    """Get current unified human state for a session. Call this before generating important responses.
 
-    Returns stress level (0-100), state label, active signals, confidence,
-    and an LLM behavior recommendation. Call before generating important
-    responses to adapt tone, length, and complexity. Not a medical device.
+    Returns:
+    - state: calm | relaxed | focused | stressed | acute_stress
+    - stress_score: 0-100 (lower = calmer)
+    - confidence: 0.0-1.0 (based on signal quality and device type)
+    - suggested_action: maintain_engagement | simplify_and_focus | de-escalate_and_shorten | pause_and_ground
+    - action_reason: human-readable explanation of why this action was suggested
+    - adaptation_effectiveness (on 2nd+ call): shows whether your previous suggested_action actually reduced stress — contains previous_action, stress_delta, and effective boolean. Use this to self-improve.
+
+    Use suggested_action to adapt your response: calm/relaxed = full complexity, focused = shorter and structured, stressed = max 2 sentences, acute_stress = one grounding sentence only.
+
+    Requires a prior ingest call to have data. Not a medical device.
     """
     async with httpx.AsyncClient(timeout=10) as client:
         resp = await client.get(
@@ -104,12 +112,24 @@ async def ingest(
     user_message: str | None = None,
     ai_response: str | None = None,
 ) -> dict:
-    """Send human signals from any sensor, get unified state back.
+    """Send biometric signals from any sensor, get unified state back.
 
-    session_id + timestamp + at least one signal required.
-    Heart rate, glucose, EEG, voice tone, facial expression —
-    send what you have. Include user_message + ai_response to
-    activate Trigger Memory. Not a medical device.
+    Required: session_id + timestamp (ISO 8601) + at least one signal.
+    Send whatever you have — the API fuses all signals into one state.
+
+    Common signals (highest impact):
+    - heart_rate (bpm, 30-220) + rmssd (ms) — cardiovascular
+    - tone: calm | tense | anxious | hostile — vocal
+    - sentiment: -1.0 to 1.0 — textual
+    - expression: relaxed | neutral | tense — visual
+
+    For trigger memory (cross-session psychological tracking):
+    - Include subject_id (consistent per user, hashed)
+    - Include user_message + ai_response to detect stress topics
+
+    Returns same fields as get_human_state plus signals_received list and topics_detected.
+
+    source_device is optional but improves confidence scoring. Not a medical device.
     """
     payload = {k: v for k, v in locals().items() if v is not None}
 
@@ -129,9 +149,14 @@ async def ingest(
 async def get_trigger_memory(subject_id: str) -> dict:
     """Retrieve psychological trigger profile for a subject.
 
-    Shows which conversation topics cause stress (active triggers)
-    and which have been resolved. Requires subject_id from previous
-    ingest calls with user_message + ai_response. Not a medical device.
+    Returns which conversation topics consistently cause stress (active triggers) and which have been resolved over time.
+
+    - active triggers: topics where stress was elevated across multiple sessions. Tread carefully.
+    - resolved triggers: topics where stress has decreased. Safe to explore deeper.
+
+    Each trigger includes observation_count, avg_score, peak_score, and last_seen.
+
+    Requires prior ingest calls with the same subject_id. Not a medical device.
     """
     async with httpx.AsyncClient(timeout=10) as client:
         resp = await client.get(
@@ -149,8 +174,11 @@ async def get_trigger_memory(subject_id: str) -> dict:
 async def get_session_history(session_id: str, minutes: int = 5) -> dict:
     """Get state history for a session over time.
 
-    Returns timestamped datapoints with stress scores, states,
-    and heart rates. Useful for trend analysis. Not a medical device.
+    Returns timestamped datapoints with stress_score, state, and heart_rate for each observation.
+    Includes an overall trend: rising | falling | stable.
+
+    Use minutes parameter to control the lookback window (default: 5, max: 60).
+    Useful for detecting stress patterns during a conversation. Not a medical device.
     """
     async with httpx.AsyncClient(timeout=10) as client:
         resp = await client.get(
