@@ -1,0 +1,25 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "ai.nefesh/human-state",
+  "title": "Nefesh — Real-Time Human State Awareness for AI",
+  "description": "B2B middleware API that fuses biometric signals (heart rate, HRV, voice, facial expression, text sentiment) into a unified stress score (0-100) with behavioral adaptation prompts. 7 MCP tools, 4 A2A skills. Closed-loop adaptation feedback. Trigger memory for cross-session psychological context. Free tier: 1,000 calls/month.",
+  "repository": {
+    "url": "https://github.com/nefesh-ai/nefesh-mcp-server",
+    "source": "github"
+  },
+  "version": "4.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.nefesh.ai/mcp",
+      "headers": [
+        {
+          "name": "X-Nefesh-Key",
+          "description": "API key. Get free at https://nefesh.ai/signup (1,000 calls/month) or connect without a key and use the request_api_key tool.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
