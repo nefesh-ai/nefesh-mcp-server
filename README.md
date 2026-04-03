@@ -95,7 +95,8 @@ Sign up at [nefesh.ai/signup](https://nefesh.ai/signup) (1,000 calls/month, no c
 | **Cline** | `cline_mcp_settings.json` (via UI: "Configure MCP Servers") |
 | **Continue.dev** | `.continue/config.yaml` |
 | **Roo Code** | `.roo/mcp.json` |
-| **Amazon Q** | `~/.aws/amazonq/mcp.json` |
+| **Kiro (Amazon)** | `~/.kiro/mcp.json` |
+| **OpenClaw** | `~/.config/openclaw/mcp.json` |
 | **JetBrains IDEs** | Settings > Tools > MCP Server |
 | **Zed** | `~/.config/zed/settings.json` (uses `context_servers`) |
 | **OpenAI Codex CLI** | `~/.codex/config.toml` |
