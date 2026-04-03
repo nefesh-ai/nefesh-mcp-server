@@ -221,11 +221,24 @@ It should list the 6 tools above.
 | **Solo** | $25/month | 50,000/month |
 | **Enterprise** | Custom | Custom SLA |
 
+## CLI Alternative
+
+Prefer the terminal over MCP? Use the Nefesh CLI (10-32x lower token cost than MCP for AI agents):
+
+```bash
+npm install -g @nefesh/cli
+nefesh ingest --session test --heart-rate 72 --tone calm
+nefesh state test --json
+```
+
+GitHub: [nefesh-ai/nefesh-cli](https://github.com/nefesh-ai/nefesh-cli)
+
 ## Documentation
 
 - [Full API Reference](https://nefesh.ai/llms-full.txt)
 - [Quick Start](https://nefesh.ai/docs/quickstart)
 - [State Mapping](https://nefesh.ai/docs/states)
+- [CLI](https://github.com/nefesh-ai/nefesh-cli)
 - [A2A Agent Card](https://mcp.nefesh.ai/.well-known/agent-card.json)
 - [A2A Protocol Spec](https://a2a-protocol.org/latest/specification/)
 
