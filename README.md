@@ -193,7 +193,6 @@ Same authentication as MCP — `X-Nefesh-Key` header or `Authorization: Bearer` 
 | `ingest` | Yes | Send biometric signals (heart rate, HRV, voice tone, expression, sentiment, 30+ fields) and get unified state back. Include `subject_id` for trigger memory. |
 | `get_trigger_memory` | Yes | Get psychological trigger profile — which topics cause stress (active) and which have been resolved over time. |
 | `get_session_history` | Yes | Get timestamped state history with trend (rising/falling/stable). |
-| `delete_subject` | Yes | GDPR-compliant cascading deletion of all data for a subject. |
 
 ## How self-provisioning works
 
@@ -212,7 +211,7 @@ After adding the config, ask your AI agent:
 
 > "What tools do you have from Nefesh?"
 
-It should list the 7 tools above.
+It should list the 6 tools above.
 
 ## Pricing
 
