@@ -8,6 +8,29 @@ Send sensor data (heart rate, voice, facial expression, text sentiment), get bac
 
 On the 2nd+ call, the response includes `adaptation_effectiveness` — telling your agent whether its previous approach actually worked. A closed-loop feedback system for self-improving agents.
 
+## Adaptation Effectiveness (Closed-Loop)
+
+Most APIs give you a state. Nefesh tells you whether your reaction to that state actually worked.
+
+On the 2nd+ call within a session, every response includes:
+
+```json
+{
+  "state": "focused",
+  "stress_score": 45,
+  "suggested_action": "simplify_and_focus",
+  "adaptation_effectiveness": {
+    "previous_action": "de-escalate_and_shorten",
+    "previous_score": 68,
+    "current_score": 45,
+    "stress_delta": -23,
+    "effective": true
+  }
+}
+```
+
+Your agent can read `effective: true` and know its previous de-escalation worked. If `effective: false`, the agent adjusts its strategy. No other human-state system provides this feedback loop.
+
 ## Setup
 
 ### Option A: Connect first, get a key through your agent (fastest)
