@@ -183,6 +183,8 @@ Nefesh is also available as an A2A-compatible agent. While MCP handles tool-call
 
 Same authentication as MCP — `X-Nefesh-Key` header or `Authorization: Bearer` token. Free tier works on both protocols.
 
+Source: [nefesh-ai/nefesh-a2a](https://github.com/nefesh-ai/nefesh-a2a) · Docs: [nefesh.ai/docs/a2a](https://nefesh.ai/docs/a2a)
+
 ## MCP Tools
 
 | Tool | Auth | Description |
@@ -239,13 +241,22 @@ Want the AI to adapt automatically? Use the [Nefesh Cognitive Compute Router](ht
 
 GitHub: [nefesh-ai/nefesh-gateway](https://github.com/nefesh-ai/nefesh-gateway)
 
+## Human State Protocol (HSP)
+
+Nefesh implements and maintains the [Human State Protocol](https://github.com/nefesh-ai/human-state-protocol), an open specification for exchanging human physiological state between AI systems. HSP defines a standard JSON format for stress scores, behavioral recommendations, and adaptation feedback so any agent can produce or consume human state data interoperably. Apache 2.0.
+
+GitHub: [nefesh-ai/human-state-protocol](https://github.com/nefesh-ai/human-state-protocol) · Docs: [nefesh.ai/docs/hsp](https://nefesh.ai/docs/hsp)
+
 ## Documentation
 
 - [Full API Reference](https://nefesh.ai/llms-full.txt)
 - [Quick Start](https://nefesh.ai/docs/quickstart)
 - [State Mapping](https://nefesh.ai/docs/states)
-- [CLI](https://github.com/nefesh-ai/nefesh-cli)
-- [Gateway](https://github.com/nefesh-ai/nefesh-gateway)
+- [MCP Server](https://nefesh.ai/docs/mcp) · [Source](https://github.com/nefesh-ai/nefesh-mcp-server)
+- [A2A Server](https://nefesh.ai/docs/a2a) · [Source](https://github.com/nefesh-ai/nefesh-a2a)
+- [Cognitive Compute Router (Gateway)](https://nefesh.ai/docs/gateway) · [Source](https://github.com/nefesh-ai/nefesh-gateway)
+- [CLI](https://nefesh.ai/docs/cli) · [Source](https://github.com/nefesh-ai/nefesh-cli)
+- [Human State Protocol (HSP)](https://nefesh.ai/docs/hsp) · [Source](https://github.com/nefesh-ai/human-state-protocol)
 - [A2A Agent Card](https://mcp.nefesh.ai/.well-known/agent-card.json)
 - [A2A Protocol Spec](https://a2a-protocol.org/latest/specification/)
 
